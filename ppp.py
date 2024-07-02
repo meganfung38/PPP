@@ -1,3 +1,5 @@
+import logging
+
 import pandas as pd
 from datetime import datetime, timedelta
 from flask import Flask, request, jsonify
@@ -5,23 +7,33 @@ import os
 
 app = Flask(__name__)
 
+logging.basicConfig(level=logging.DEBUG)
+
 
 @app.route('/run_python', methods=['POST'])
 def run_python():
-    data = request.json
-    file = request.files['file']
-    pg = data.get('pg', None)
-    file_path = os.path.join('/tmp', file.filename)
-    file.save(file_path)
-    ppp = create_ppp(file_path, pg)
-    os.remove(file_path)
-    return jsonify(ppp)
+    logging.debug("Received Request")
+    try:
+        data = request.form
+        logging.debug("Data received: %s", data)
+        file = request.files['file']
+        pg = data.get('pg', None)
+        file_path = os.path.join('/tmp', file.filename)
+        file.save(file_path)
+        logging.debug("File saved to %s", file)
+        ppp = create_ppp(file_path, pg)
+        os.remove(file_path)
+        logging.debug("PPP created: %s", ppp)
+        return jsonify({'ppp': ppp})
+    except Exception as e:
+        logging.error("error occurred", exc_info=True)
+        return jsonify({'error': str(e)}), 400
 
 
 def format_task(target, og_target, corporate_initiative, name, dri, is_overdue=False):
     """formats the progress, plan, and overdue tasks"""
     if is_overdue:  # task is overdue
-        overdue = f"OVERDUE: "
+        overdue = "OVERDUE: "
     else:
         overdue = ""
     bolded_initiative = f"**{corporate_initiative}**"
