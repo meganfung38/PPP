@@ -12,20 +12,21 @@ logging.basicConfig(level=logging.DEBUG)
 
 @app.route('/run_python', methods=['POST'])
 def run_python():
-    logging.debug("Received Request")
     try:
-        data = request.form
-        logging.debug("Data received: %s", data)
-        file = request.files['file']
-        pg = data.get('pg', None)
-        file_path = os.path.join('/tmp', file.filename)
-        file.save(file_path)
-        logging.debug("File saved to %s", file)
-        ppp = create_ppp(file_path, pg)
-        os.remove(file_path)
-        logging.debug("PPP created: %s", ppp)
+        # check for authentication
+        if 'x-vercel-protection-bypass' not in request.headers:
+            logging.error("Protection bypass header missing")
+            return jsonify({'error': 'Protection bypass header missing'}), 400
+
+        data = request.form  # retrieve form data from POST request
+        file = request.files['file']  # retrieve Excel file
+        pg = data.get('pg', None)  # get sheet name if provided
+        file_path = os.path.join('/tmp', file.filename)  # file path where file will be temporarily saved
+        file.save(file_path)  # saving file to defined path
+        ppp = create_ppp(file_path, pg)  # PPP creation
+        os.remove(file_path)  # cleanup: removing temporarily file
         return jsonify({'ppp': ppp})
-    except Exception as e:
+    except Exception as e:  # errors occurred during process
         logging.error("error occurred", exc_info=True)
         return jsonify({'error': str(e)}), 400
 
@@ -91,6 +92,7 @@ def create_ppp(file_path, pg=None):
         blocked = blocked_section.sort_values(by='Target Date')
         overdue = overdue_section.sort_values(by='Target Date')
 
+        # formatting tasks for PPP
         progress_tasks = [
             format_task(row['Complete Date'].strftime('%m/%d'),
                         row['Target Date'].strftime('%m/%d') if pd.notna(row['Target Date']) else None,
@@ -99,7 +101,6 @@ def create_ppp(file_path, pg=None):
                         row['Project DRI'])
             for index, row in progress.iterrows()
         ]
-
         plan_tasks = [
             format_task(row['Target Date'].strftime('%m/%d'),
                         row['Original Target Date'].strftime('%m/%d')
@@ -109,7 +110,6 @@ def create_ppp(file_path, pg=None):
                         row['Project DRI'])
             for index, row in plan.iterrows()
         ]
-
         problem_tasks = [
             format_problem_task(row['Project Name'],
                                 row['Comments']
@@ -126,6 +126,7 @@ def create_ppp(file_path, pg=None):
             for index, row in overdue.iterrows()
         ]
 
+        # formatting json response
         ppp = (
             "**Progress [Last Week]** \n" +
             "\n".join(f"- {task}" for task in progress_tasks) + "\n\n" +

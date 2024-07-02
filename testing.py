@@ -1,10 +1,11 @@
 import requests
 
-url = 'http://127.0.0.1:5000/run_python'
+url = 'https://ppp-31vkeuvpc-megan-fungs-projects.vercel.app'
 files = {'file': open('Medium Excel Sample.xlsx', 'rb')}
 data = {'pg': None}
+headers = {'x-vercel-protection-bypass': 'UmZ9Iux92fppn1pOAwuMTKFglDmA0PC2'}
 
-response = requests.post(url, files=files, data=data)
+response = requests.post(url, files=files, data=data, headers=headers)
 print('Response status code:', response.status_code)
 print('Response text:', response.text)
 
