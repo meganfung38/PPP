@@ -53,6 +53,10 @@ def create_ppp(file_path, pg=None):
         df['Target Date'] = pd.to_datetime(df['Target Date'], format='%m/%d/%Y', errors='coerce')
         df['Complete Date'] = pd.to_datetime(df['Complete Date'], format='%m/%d/%Y', errors='coerce')
 
+        # check for optionally existing columns: comments or original target date
+        has_og_target_date = 'Original Target Date' in df.columns
+        has_comments = 'Comments' in df.columns
+
         # get range of dates for progress and plan sections
         today = datetime.now()  # today's date
         last_week = today - timedelta(days=7)  # 7 days ago
@@ -73,39 +77,50 @@ def create_ppp(file_path, pg=None):
         progress = progress_section.sort_values(by='Complete Date')
         plan = plan_section.sort_values(by='Target Date')
         blocked = blocked_section.sort_values(by='Target Date')
-        overdue = overdue_section.sort_values9(by='Target Date')
+        overdue = overdue_section.sort_values(by='Target Date')
 
         progress_tasks = [
             format_task(row['Complete Date'].strftime('%m/%d'),
                         row['Target Date'].strftime('%m/%d') if pd.notna(row['Target Date']) else None,
-                        row['Corporate Initiative'], row['Project Name'], row['Project DRI'])
+                        row['Corporate Initiative'],
+                        row['Project Name'],
+                        row['Project DRI'])
             for index, row in progress.iterrows()
         ]
 
         plan_tasks = [
             format_task(row['Target Date'].strftime('%m/%d'),
-                        row['Original Target Date'].strftime('%m/%d') if pd.notna(row['Target Date']) else None,
-                        row['Corporate Initiative'], row['Project Name'], row['Project DRI'])
+                        row['Original Target Date'].strftime('%m/%d')
+                        if has_og_target_date and pd.notna(row['Original Target Date']) else None,
+                        row['Corporate Initiative'],
+                        row['Project Name'],
+                        row['Project DRI'])
             for index, row in plan.iterrows()
         ]
 
         problem_tasks = [
-            format_problem_task(row['Project Name'], row['Comments'] if pd.notna(row['Comments']) else None)
+            format_problem_task(row['Project Name'],
+                                row['Comments']
+                                if has_comments and pd.notna(row['Comments']) else None)
             for index, row in blocked.iterrows()
         ] + [
             format_task(row['Target Date'].strftime('%m/%d'),
-                        row['Original Target Date'].strftime('%m/%d') if pd.notna(row['Target Date']) else None,
-                        row['Corporate Initiative'], row['Project Name'], row['Project DRI'], is_overdue=True)
+                        row['Original Target Date'].strftime('%m/%d')
+                        if has_og_target_date and pd.notna(row['Original Target Date']) else None,
+                        row['Corporate Initiative'],
+                        row['Project Name'],
+                        row['Project DRI'],
+                        is_overdue=True)
             for index, row in overdue.iterrows()
         ]
 
         ppp = (
             "**Progress [Last Week]** \n" +
-            "\n".join(f"-{task}" for task in progress_tasks) + "\n\n" +
+            "\n".join(f"- {task}" for task in progress_tasks) + "\n\n" +
             "**Plans [Next Two Months]** \n" +
-            "\n".join(f"-{task}" for task in plan_tasks) + "\n\n" +
+            "\n".join(f"- {task}" for task in plan_tasks) + "\n\n" +
             "**Progress [Ongoing]** \n" +
-            "\n".join(f"-{task}" for task in problem_tasks) + "\n\n"
+            "\n".join(f"- {task}" for task in problem_tasks) + "\n\n"
         )
 
         return ppp
@@ -114,6 +129,9 @@ def create_ppp(file_path, pg=None):
         return str(e)
 
 
-if __name__ == '__main__':
+def main():
     app.run()
 
+
+if __name__ == '__main__':
+    main()
