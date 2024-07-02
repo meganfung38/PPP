@@ -1,6 +1,6 @@
 import requests
 
-url = 'https://ppp-7o3u6yl77-megan-fungs-projects.vercel.app'
+url = 'https://ppp-2452yff1s-megan-fungs-projects.vercel.app/run_python'
 files = {'file': open('Medium Excel Sample.xlsx', 'rb')}
 data = {'pg': None}
 headers = {'x-vercel-protection-bypass': 'UmZ9Iux92fppn1pOAwuMTKFglDmA0PC2'}

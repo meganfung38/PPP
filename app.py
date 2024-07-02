@@ -18,17 +18,21 @@ def run_python():
             logging.error("Protection bypass header missing")
             return jsonify({'error': 'Protection bypass header missing'}), 400
 
+        logging.debug("got request")
         data = request.form  # retrieve form data from POST request
+        logging.debug("got data: %s", data)
         file = request.files['file']  # retrieve Excel file
         pg = data.get('pg', None)  # get sheet name if provided
         file_path = os.path.join('/tmp', file.filename)  # file path where file will be temporarily saved
         file.save(file_path)  # saving file to defined path
+        logging.debug("file saved to %s", file_path)
         ppp = create_ppp(file_path, pg)  # PPP creation
         os.remove(file_path)  # cleanup: removing temporarily file
+        logging.debug("PPP created: %s", ppp)
         return jsonify({'ppp': ppp})
     except Exception as e:  # errors occurred during process
         logging.error("error occurred", exc_info=True)
-        return jsonify({'error': str(e)}), 400
+        return jsonify({'error': str(e)}), 500
 
 
 def format_task(target, og_target, corporate_initiative, name, dri, is_overdue=False):
