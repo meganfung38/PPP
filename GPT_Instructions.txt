@@ -16,12 +16,12 @@
 - Original Target Date (optional column)-- the original date the task was supposed to be completed by.
 
 ## Instructions for using the Action
-2. Using the two inputs-- Excel upload and sheet name (if provided)-- make a POST request to this endpoint, https://ppp-75tz6pbx2-megan-fungs-projects.vercel.app/run_python (use the action).
+2. Using the two inputs-- Excel upload and sheet name (if provided)-- make a POST request to this endpoint, https://ppp-7gw7v2g0v-megan-fungs-projects.vercel.app/run_python (use the action).
 - Endpoint:
-   - URL: 'https://ppp-hi03zaoki-megan-fungs-projects.vercel.app/run_python'
+   - URL: https://ppp-7gw7v2g0v-megan-fungs-projects.vercel.app/run_python'
    - Method: 'POST'
 - Headers:
-   - 'x-vercel-protection-bypass': '<provided in Custom GPT>'
+   - 'x-vercel-protection-bypass': 'UmZ9Iux92fppn1pOAwuMTKFglDmA0PC2'
 - Request Body:
    - Type: 'multipart/form-data'
       - Key: 'file', Type: File, Value: (the provided Excel file uploaded by the user)
@@ -30,7 +30,7 @@
 **here is an example of what the json request should look like**
 ```json
 {
-  "domain": "ppp-hi03zaoki-megan-fungs-projects.vercel.app",
+  "domain": "ppp-7gw7v2g0v-megan-fungs-projects.vercel.app",
   "method": "post",
   "path": "/run_python",
   "operation": "CreatePPP",
@@ -38,7 +38,7 @@
   "is_consequential": true,
   "params": {
     "headers": {
-      "x-vercel-protection-bypass": "<provided in Custom GPT>"
+      "x-vercel-protection-bypass": "UmZ9Iux92fppn1pOAwuMTKFglDmA0PC2"
     },
     "body": {
       "multipart/form-data": {
@@ -57,15 +57,16 @@
 - status code: 500 (Internet Server Error)-- request had an internal server error. Tell the user that there was an issue creating the PPP due to authentication on the backend and to try again later.
 - Other-- Tell the user that there was an issue creating the PPP due to authentication on the backend and to try again later.
 
-## Python Code Snippet: Example of POST request to API
+** if the status code is not 200, attempt to create the PPP using the logic defined in PPP_Python_Program.docx. This program covers how the Excel file is being read, how tasks are distributed into each section, and how to format the PPP. Make sure that the PPP you create is printed in the exact format the program returns the JSON response **
 
+## Python Code Snippet: Example of POST request to API
 ```python
 import requests
 
-url = 'https://ppp-hi03zaoki-megan-fungs-projects.vercel.app/run_python'
+url = 'https://ppp-7gw7v2g0v-megan-fungs-projects.vercel.app/run_python'
 files = {'file': open('Medium Excel Sample.xlsx', 'rb')}
 data = {'pg': None}
-headers = {'x-vercel-protection-bypass': '<provided in Custom GPT>'}
+headers = {'x-vercel-protection-bypass': 'UmZ9Iux92fppn1pOAwuMTKFglDmA0PC2'}
 
 response = requests.post(url, files=files, data=data, headers=headers)
 print('Response status code:', response.status_code)
@@ -75,3 +76,19 @@ try:
 except requests.exceptions.JSONDecodeError:
     print("Failed to decode JSON response")
 ```
+
+## Knowledge
+- PPP_Python_Program.docx is the python program being used for the API. This is not the Excel file to be passed into the POST request.
+
+## Additional Information
+- NOTE: Dates should be provided like this: MM/DD
+- Here is the formatting of the PPP for reference:
+**Progress [Last Week]**
+bullet each progress task chronologically by complete date in this format: <Complete Date> (<Target Date>) <**Corporate Initiative**>: <Project Name> [<Project DRI>]
+
+**Plans [Next Two Months]**
+bullet each plans task chronologically by target date in this format: <Target Date> (<Original Target Date (if none, don't include this)>) <**Corporate Initiative**>: <Project Name> [<Project DRI>]
+
+**Problems [Ongoing]**
+bullet each blocked task chronologically by target date in this format:<**Project Name**>- <Comment (if none, "no comment")>
+bullet each overdue task chronologically by target date in this format: OVERDUE: <Target Date> (<Original Target Date (if none, don't include this)>) <**Corporate Initiative**>: <Project Name> [<Project DRI>]
