@@ -21,7 +21,7 @@
    - URL: 'https://ppp-hi03zaoki-megan-fungs-projects.vercel.app/run_python'
    - Method: 'POST'
 - Headers:
-   - 'x-vercel-protection-bypass': 'UmZ9Iux92fppn1pOAwuMTKFglDmA0PC2'
+   - 'x-vercel-protection-bypass': '<provided in Custom GPT>'
 - Request Body:
    - Type: 'multipart/form-data'
       - Key: 'file', Type: File, Value: (the provided Excel file uploaded by the user)
@@ -38,7 +38,7 @@
   "is_consequential": true,
   "params": {
     "headers": {
-      "x-vercel-protection-bypass": "UmZ9Iux92fppn1pOAwuMTKFglDmA0PC2"
+      "x-vercel-protection-bypass": "<provided in Custom GPT>"
     },
     "body": {
       "multipart/form-data": {
@@ -65,7 +65,7 @@ import requests
 url = 'https://ppp-hi03zaoki-megan-fungs-projects.vercel.app/run_python'
 files = {'file': open('Medium Excel Sample.xlsx', 'rb')}
 data = {'pg': None}
-headers = {'x-vercel-protection-bypass': 'UmZ9Iux92fppn1pOAwuMTKFglDmA0PC2'}
+headers = {'x-vercel-protection-bypass': '<provided in Custom GPT>'}
 
 response = requests.post(url, files=files, data=data, headers=headers)
 print('Response status code:', response.status_code)
