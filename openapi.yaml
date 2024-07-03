@@ -1,108 +1,62 @@
-{
-  "openapi": "3.1.0",
-  "info": {
-    "title": "Flask App API",
-    "description": "API for uploading an Excel file and optionally specifying a sheet name.",
-    "version": "1.0.0"
-  },
-  "servers": [
-    {
-      "url": "https://ppp-75tz6pbx2-megan-fungs-projects.vercel.app",
-      "description": "Vercel deployment of the Flask app"
-    }
-  ],
-  "paths": {
-    "/run_python": {
-      "post": {
-        "operationId": "CreatePPP",
-        "summary": "Creates a PPP for an Excel upload at a sheet name (if provided) containing a list of tasks",
-        "parameters": [
-          {
-            "name": "x-vercel-protection-bypass",
-            "in": "header",
-            "required": true,
-            "description": "Secret protection bypass token for authentication",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "file": {
-                    "type": "string",
-                    "format": "binary",
-                    "description": "The Excel file to upload"
-                  },
-                  "pg": {
-                    "type": "string",
-                    "description": "Optional sheet name"
-                  }
-                },
-                "required": ["file"]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "success"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "File processed successfully"
-                    },
-                    "data": {
-                      "type": "object",
-                      "description": "Additional data from the server"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request, invalid input"
-          },
-          "401": {
-            "description": "Unauthorized, invalid or missing bypass token"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "default": {
-            "description": "Unknown status code"
-          }
-        }
-      }
-    }
-  },
-  "components": {
-    "schemas": {},
-    "securitySchemes": {
-      "vercelProtectionBypass": {
-        "type": "apiKey",
-        "in": "header",
-        "name": "x-vercel-protection-bypass"
-      }
-    }
-  },
-  "security": [
-    {
-      "vercelProtectionBypass": []
-    }
-  ]
-}
+openapi: 3.1.0
+info:
+  title: Flask App API
+  description: API for uploading an Excel file and optionally specifying a sheet name.
+  version: 1.0.0
+servers:
+  - url: https://ppp-hi03zaoki-megan-fungs-projects.vercel.app
+    description: Vercel deployment of the Flask app
+paths:
+  /run_python:
+    post:
+      operationId: CreatePPP
+      summary: Creates a PPP for an Excel upload at a sheet name (if provided) containing a list of tasks
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The Excel file to upload
+                pg:
+                  type: string
+                  description: Optional sheet name
+              required:
+                - file
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: File processed successfully
+                  data:
+                    type: object
+                    description: Additional data from the server
+        "400":
+          description: Bad request, invalid input
+        "401":
+          description: Unauthorized, invalid or missing bypass token
+        "500":
+          description: Internal server error
+        default:
+          description: Unknown status code
+components:
+  schemas: {}
+  securitySchemes:
+    vercelProtectionBypass:
+      type: apiKey
+      in: header
+      name: x-vercel-protection-bypass

@@ -15,17 +15,40 @@
 - Comments (optional column)-- additional information discussing the task.
 - Original Target Date (optional column)-- the original date the task was supposed to be completed by.
 
-2. Using the two inputs-- Excel upload and sheet name (if provided)-- make a POST request to this endpoint, https://ppp-75tz6pbx2-megan-fungs-projects.vercel.app/run_python.
+## Instructions for using the Action
+2. Using the two inputs-- Excel upload and sheet name (if provided)-- make a POST request to this endpoint, https://ppp-75tz6pbx2-megan-fungs-projects.vercel.app/run_python (use the action).
 - Endpoint:
-   - URL: 'https://ppp-75tz6pbx2-megan-fungs-projects.vercel.app/run_python'
+   - URL: 'https://ppp-hi03zaoki-megan-fungs-projects.vercel.app/run_python'
    - Method: 'POST'
 - Headers:
    - 'x-vercel-protection-bypass': 'UmZ9Iux92fppn1pOAwuMTKFglDmA0PC2'
 - Request Body:
    - Type: 'multipart/form-data'
-   - Parameters:
-      - 'file': The Excel file upload (required).
-      - 'pg': The optionally provided sheet name. If none is provided, there is no value.
+      - Key: 'file', Type: File, Value: (the provided Excel file uploaded by the user)
+      - Key: 'pg,' Type: Text, Value: (the sheet name to access the Excel file at-- if provided otherwise leave empty)
+
+**here is an example of what the json request should look like**
+```json
+{
+  "domain": "ppp-hi03zaoki-megan-fungs-projects.vercel.app",
+  "method": "post",
+  "path": "/run_python",
+  "operation": "CreatePPP",
+  "operation_hash": "ce327027f62e31c6e8c3a2fa6413c583001930e6",
+  "is_consequential": true,
+  "params": {
+    "headers": {
+      "x-vercel-protection-bypass": "UmZ9Iux92fppn1pOAwuMTKFglDmA0PC2"
+    },
+    "body": {
+      "multipart/form-data": {
+        "file": <the provided Excel file uploaded by the user>,
+        "pg": <the sheet name to access the Excel file at (if provided, otherwise leave empty>
+      }
+    }
+  }
+}
+```
 
 3. Handle the POST request response.
 - status code: 200 (OK)-- request was successful, the response will include a JSON object with the PPP of the tasks for the Excel upload. Print the response for the user.
@@ -39,7 +62,7 @@
 ```python
 import requests
 
-url = ' https://ppp-75tz6pbx2-megan-fungs-projects.vercel.app/run_python'
+url = 'https://ppp-hi03zaoki-megan-fungs-projects.vercel.app/run_python'
 files = {'file': open('Medium Excel Sample.xlsx', 'rb')}
 data = {'pg': None}
 headers = {'x-vercel-protection-bypass': 'UmZ9Iux92fppn1pOAwuMTKFglDmA0PC2'}
