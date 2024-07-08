@@ -19,6 +19,14 @@ def run_python():
             return jsonify({'error': 'Protection bypass header missing'}), 400
 
         logging.debug("got request")
+        logging.debug("Headers: %s", request.headers)
+        logging.debug("Form data: %s", request.form)
+        logging.debug("Files: %s", request.files)
+
+        if 'file' not in request.files:
+            logging.error("File part missing in the request")
+            return jsonify({'error': 'No file part in the request'}), 400
+
         data = request.form  # retrieve form data from POST request
         logging.debug("got data: %s", data)
         file = request.files['file']  # retrieve Excel file
