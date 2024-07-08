@@ -4,7 +4,7 @@ info:
   description: API for uploading an Excel file and optionally specifying a sheet name.
   version: 1.0.0
 servers:
-  - url: https://ppp-7gw7v2g0v-megan-fungs-projects.vercel.app
+  - url: https://ppp-i1rl8289o-megan-fungs-projects.vercel.app
     description: Vercel deployment of the Flask app
 paths:
   /run_python:
@@ -60,3 +60,5 @@ components:
       type: apiKey
       in: header
       name: x-vercel-protection-bypass
+security:
+  - vercelProtectionBypass: []

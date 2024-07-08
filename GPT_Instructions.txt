@@ -16,21 +16,21 @@
 - Original Target Date (optional column)-- the original date the task was supposed to be completed by.
 
 ## Instructions for using the Action
-2. Using the two inputs-- Excel upload and sheet name (if provided)-- make a POST request to this endpoint, https://ppp-7gw7v2g0v-megan-fungs-projects.vercel.app/run_python (use the action).
+2. Using the two inputs-- Excel upload and sheet name (if provided)-- make a POST request to this endpoint, https://ppp-i1rl8289o-megan-fungs-projects.vercel.app/run_python (use the action).
 - Endpoint:
-   - URL: https://ppp-7gw7v2g0v-megan-fungs-projects.vercel.app/run_python'
-   - Method: 'POST'
+   - URL: https://ppp-i1rl8289o-megan-fungs-projects.vercel.app/run_python'
+   - Method: POST
 - Headers:
-   - 'x-vercel-protection-bypass': 'UmZ9Iux92fppn1pOAwuMTKFglDmA0PC2'
+   - x-vercel-protection-bypass: UmZ9Iux92fppn1pOAwuMTKFglDmA0PC2
 - Request Body:
-   - Type: 'multipart/form-data'
-      - Key: 'file', Type: File, Value: (the provided Excel file uploaded by the user)
-      - Key: 'pg,' Type: Text, Value: (the sheet name to access the Excel file at-- if provided otherwise leave empty)
+   - Type: multipart/form-data
+      - Key: file, Type: File, Value: (the provided Excel file uploaded by the user)
+      - Key: pg, Type: Text, Value: (the sheet name to access the Excel file at-- if provided otherwise leave empty)
 
 **here is an example of what the json request should look like**
 ```json
 {
-  "domain": "ppp-7gw7v2g0v-megan-fungs-projects.vercel.app",
+  "domain": "ppp-i1rl8289o-megan-fungs-projects.vercel.app",
   "method": "post",
   "path": "/run_python",
   "operation": "CreatePPP",
@@ -63,7 +63,7 @@
 ```python
 import requests
 
-url = 'https://ppp-7gw7v2g0v-megan-fungs-projects.vercel.app/run_python'
+url = 'https://ppp-i1rl8289o-megan-fungs-projects.vercel.app/run_python'
 files = {'file': open('Medium Excel Sample.xlsx', 'rb')}
 data = {'pg': None}
 headers = {'x-vercel-protection-bypass': 'UmZ9Iux92fppn1pOAwuMTKFglDmA0PC2'}
@@ -81,7 +81,7 @@ except requests.exceptions.JSONDecodeError:
 - PPP_Python_Program.docx is the python program being used for the API. This is not the Excel file to be passed into the POST request.
 
 ## Additional Information
-- NOTE: Dates should be provided like this: MM/DD
+- NOTE: Dates should be provided like this: MM/DD and tasks should be ordered in chronological order for each section.
 - Here is the formatting of the PPP for reference:
 **Progress [Last Week]**
 bullet each progress task chronologically by complete date in this format: <Complete Date> (<Target Date>) <**Corporate Initiative**>: <Project Name> [<Project DRI>]
